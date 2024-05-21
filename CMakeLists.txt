@@ -27,8 +27,13 @@ link_libraries(${LIBXML2_LIBRARIES})
 #endif (UNIX)
 
 # Ajoute un éxecutable à partir du main.c
-add_executable(test_GTK main.c
-        arena.c)
+add_executable(test_GTK
+        main.c
+        arena.c
+        gtk_utils.c
+)
 
 # Lie à l'éxecutable la librairie GTK+
 TARGET_LINK_LIBRARIES(test_GTK ${GTK3_LIBRARIES})
+
+target_link_libraries(test_GTK winmm)
