@@ -31,6 +31,7 @@ add_executable(test_GTK
         main.c
         arena.c
         gtk_utils.c
+        createCharacter.h
 )
 
 # Lie à l'éxecutable la librairie GTK+

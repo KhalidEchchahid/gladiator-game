@@ -1,3 +1,4 @@
+
 #include <gtk/gtk.h>
 
 #ifndef WINDOW_H_INCLUDED
@@ -73,7 +74,7 @@ Fenetre* initialiser_win(gchar* titre, gchar* icon_path,gchar *name,gchar*bgcolo
     return win;
 }
 
-void create_window(Fenetre *W) {
+void create_window_n(Fenetre *W) {
     // Cr�ez la fen�tre
     W->window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
     // Ajoutez le titre s'il existe
@@ -138,7 +139,7 @@ void create_window(Fenetre *W) {
 Fenetre* add_window()
 {
     Fenetre *ma_fenetre = initialiser_win("Instagram", NULL, "F1", "#0000", 3840, 2160, 2, 0, 0, 1, TRUE);
-    create_window(ma_fenetre);
+    create_window_n(ma_fenetre);
     return((Fenetre*)ma_fenetre);
 }
 

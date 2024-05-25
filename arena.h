@@ -4,33 +4,79 @@
 #include <gtk/gtk.h>
 #include "player.h"
 
-#define SPRITE_WIDTH (256)
-#define SPRITE_HEIGHT (2560/10)
-#define NUM_STANDING_FRAMES 6
-#define NUM_WALKING_FRAMES 8
-#define NUM_RUNNING_FRAMES 8
-#define NUM_ATTACKING1_FRAMES 4
-#define NUM_ATTACKING2_FRAMES 5
-#define NUM_ATTACKING3_FRAMES 4
-#define NUM_DEFENDING_FRAMES 2
-#define NUM_JUMPING_FRAMES 8
-#define NUM_HURTING_FRAMES 3
-#define NUM_DYING_FRAMES 6
 
-extern GtkImage *gladiator_image;
-extern GdkPixbuf *sprite_sheet;
-extern int current_frame;
-extern int current_action;
-extern int action_frames[];
-extern int gladiator_x;
 extern GtkWidget *life_image_player1;
 extern GtkWidget *life_image_player2;
 extern GtkWidget *time_image;
 extern GtkWidget *table_time_image;
 
+typedef struct {
+    int standing;
+    int walking;
+    int running;
+    int attacking1;
+    int attacking2;
+    int attacking3;
+    int defending;
+    int jumping;
+    int hurting;
+    int dying;
+} ActionFrames;
+
+typedef struct Actor{
+    const char *name;
+    GdkPixbuf *sprite_sheet;
+    GtkImage *image;
+    int current_frame;
+    int current_action;
+    ActionFrames action_frames;
+    int x_position;
+    int y_position;
+    int sprite_width;
+    int sprite_height;
+    int health;
+    int Attack_P;
+    int Defense_d;
+    void (*attack)(struct Actor *self, struct Machine *opponent);
+} Actor;
+
+
+typedef struct Machine{
+    GdkPixbuf *sprite_sheet;
+    GtkImage *image;
+    int current_frame;
+    int current_action;
+    struct {
+        int standing;
+        int walking;
+        int attacking1;
+        int hurting;
+        int dying;
+    } action_frames;
+    int x_position;
+    int y_position;
+    int sprite_width;
+    int sprite_height;
+    int health;
+    void (*attack)(struct Machine *self, struct Actor *opponent);
+} Machine;
+
+
+
+
+extern Actor gladiator;
+extern Machine machine;
+
 
 gboolean update_animation(gpointer data);
+gboolean update_machine_animation(gpointer data);
 gboolean on_key_press(GtkWidget *widget, GdkEventKey *event, gpointer data);
-void run_game(Player *player);
+void run_game(Actor *player , Machine *machine , int isSmart );
+void gladiator_attack(Actor *self, Machine *opponent);
+void machine_attack(Machine *self, Actor *opponent);
+void update_health_label(int health ,GtkWidget *health_label);
 
 #endif //TEST_GTK_ARENA_H
+
+
+
