@@ -16,7 +16,7 @@
 #include "imageHeader.h"
 
 
-#define TOTAL_POINTS 100
+#define TOTAL_POINTS 200
 #define NUM_PlayerISTICS 4
 // Create player data
 

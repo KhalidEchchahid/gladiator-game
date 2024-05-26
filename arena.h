@@ -32,11 +32,12 @@ typedef struct Actor{
     ActionFrames action_frames;
     int x_position;
     int y_position;
-    int sprite_width;
-    int sprite_height;
+    double sprite_width;
+    double sprite_height;
     int health;
     int Attack_P;
     int Defense_d;
+    int speed ;
     void (*attack)(struct Actor *self, struct Machine *opponent);
 } Actor;
 
@@ -55,9 +56,12 @@ typedef struct Machine{
     } action_frames;
     int x_position;
     int y_position;
-    int sprite_width;
-    int sprite_height;
+    double sprite_width;
+    double sprite_height;
     int health;
+    int attack_p ;
+    int add_health ;
+    int speed ;
     void (*attack)(struct Machine *self, struct Actor *opponent);
 } Machine;
 
@@ -67,6 +71,7 @@ typedef struct Machine{
 extern Actor gladiator;
 extern Machine machine;
 
+extern gchar* selected_arena;
 
 gboolean update_animation(gpointer data);
 gboolean update_machine_animation(gpointer data);

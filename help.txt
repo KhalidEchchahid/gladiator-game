@@ -16,3 +16,4 @@ Le jeu de gladiateurs est un jeu de combat au tour par tour où deux combattants
 
 ### Condition de Victoire:
 - Le jeu se termine lorsqu'un combattant vainc l'autre en réduisant ses PV à zéro.
+

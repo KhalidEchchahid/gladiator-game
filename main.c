@@ -25,7 +25,7 @@ int selected_avatar ;
 // Global variable to store the selected player
 Actor *selected_player = NULL;
 Machine *selected_machine = NULL ;
-int isSmart = 0 ;
+int isSmart = 1 ;
 
 
 
@@ -36,7 +36,7 @@ int isSmart = 0 ;
 // Fonction de vérification des attributs du joueur avant de créer la fenêtre des images
 void check_player_attributes(GtkWidget *button, gpointer data) {
     // Vérifiez si le joueur a été initialisé et que ses attributs sont > 0
-    if (player == NULL || player->health == 0 || player->Attack_P == 0 || player->Defense_d == 0 ) {
+    if (player == NULL || player->health == 0 || player->Attack_P == 0 || player->Defense_d == 0 || player->speed == 0 ) {
         // Afficher une boîte de dialogue pour informer l'utilisateur
         GtkWidget *dialog = gtk_message_dialog_new(NULL,
                                                    GTK_DIALOG_MODAL,
@@ -78,7 +78,7 @@ void ok_button_clicked_create(GtkWidget *widget, gpointer data) {
         player->health = 0;
         player->Attack_P = 0;
         player->Defense_d = 0;
-//        player->speed = 0;
+        player->speed = 0;
     }
 
     // Free the existing name if necessary
@@ -144,7 +144,7 @@ void ok_button_clicked_create(GtkWidget *widget, gpointer data) {
 
     PlayerOptions options;
     options.remaining_points = TOTAL_POINTS;
-    options.remaining_points_label = gtk_label_new("Remaining Points: 100");
+    options.remaining_points_label = gtk_label_new("Remaining Points: 200");
     gtk_widget_set_name(GTK_WIDGET(options.remaining_points_label), "remaining-points-label");
 
     addToBox(left_box->box, options.remaining_points_label, 0, 1, 1, 1);
@@ -172,10 +172,10 @@ void ok_button_clicked_create(GtkWidget *widget, gpointer data) {
 
 
     // Create the photo area and add it to the grid
-    photo_area= initializeBox("photo-area", 'v', 1, 0, "", 0.7);
+    photo_area= initializeBox("photo-area", 'v', 1, 0, "", 1);
 
     createBox(photo_area);
-    gtk_widget_set_size_request(photo_area->box, 400, 600);
+    gtk_widget_set_size_request(photo_area->box, 800, 300);
     const gchar *photo_path = "E:\\ILISI_s1\\GTK\\Gladiator\\resourses\\knight.png"; // Replace with the path to your default photo
     current_photo_widget = create_or_update_photo_widget(photo_path);
     addToBox(photo_area->box, current_photo_widget, 0, 1, 1, 1);
@@ -194,15 +194,10 @@ void ok_button_clicked_create(GtkWidget *widget, gpointer data) {
     GtkWidget *thumbnails_container = create_Player_thumbnails(players, 6);
     gtk_widget_set_name(thumbnails_container, "thumbnails-container");
 
-    // Attach thumbnails_container to the grid
-    // gtk_grid_attach(GTK_GRID(container), thumbnails_container, 1, 0, 1, 1); // position (1,0), spanning 1 cell
-
-    // ajout_au_Grille(myGrid->Grille, thumbnails_container, 5, 1);
 
     // Création d'un bouton simple
-    ButtonSimple* play_btn = init_button_simple("start", "Play",NULL, 10,10, "arial", "black","", FALSE, TRUE, 1000, 190);
+    ButtonSimple* play_btn = init_button_simple("start", "Play",NULL, 10,10, "arial", "black","", FALSE, TRUE, 1600, 400);
     creer_button_Simple(play_btn);
-    // ajout_au_Grille(myGrid->Grille,simpleButton->button,simpleButton->x,simpleButton->y);
 
     // Création du conteneur grid
     GtkWidget *container = gtk_grid_new();
@@ -264,11 +259,9 @@ int create_charachter() {
     Grille* myGrid = init_Grille("maGrille", 400, 200, 5, 0, NULL, 100, 100);
     create_Grille(myGrid);
     gtk_container_add(GTK_CONTAINER(myWindow->window), myGrid->Grille);
-    // Création du conteneur de défilement
-    // Scroll* sc = initializeScroll(myWindow->window, myGrid->Grille, 30, 0, 0); // Le premier argument est NULL car le conteneur parent sera défini plus tard
-    //createScroll(sc);
 
-    // Création et initialisation du label
+
+
     // Création et initialisation du label
     LabelObj* myLabel = init_label("Veuillez choisir le nom du personnage", "mon_label", FALSE, FALSE, 100, 20, 0, 10);
     create_label22(myLabel);
@@ -279,7 +272,7 @@ int create_charachter() {
     ajout_au_Grille(myGrid->Grille,myLabel->label,myLabel->x,myLabel->y);
     //image
 
-    imageObj* img=init_img("nada/golden.png",400,400);
+    imageObj* img=init_img("E:\\ILISI_s1\\GTK\\Gladiator\\resourses\\golden.png",400,400);
     create_image(img);
     ajout_au_Grille(myGrid->Grille,img->image,0,0);
     //ENTRY
@@ -294,7 +287,7 @@ int create_charachter() {
     callback_data->window = myWindow;
 
     // Création d'un bouton simple
-    ButtonSimple* simpleButton = init_button_simple("mon_bouton", "OK",NULL, 10,10, "arial", "","white", FALSE, TRUE, 0, 190);
+    ButtonSimple* simpleButton = init_button_simple("mon_bouton", "OK",NULL, 10,10, "Ranger Eastwood 24", "","white", FALSE, TRUE, 0, 190);
     creer_button_Simple(simpleButton);
     // ajout_au_Grille(myGrid->Grille,simpleButton->button,simpleButton->x,simpleButton->y);
 
@@ -349,12 +342,12 @@ int create_charachter() {
 void on_button_clicked(GtkWidget *button, gpointer data) {
     const char *button_label = gtk_button_get_label(GTK_BUTTON(button));
     if (g_strcmp0(button_label, "Start") == 0) {
-        if (selected_player) {
+        if (selected_player && selected_machine) {
             g_print("Starting the game with %s\n", selected_player->name);
             //run_game(selected_player);  // Call run_game with the selected player
             create_images_window(selected_player);
         } else {
-            g_print("No player selected!\n");
+            g_print("No player or machine selected!\n");
         }
     } else if (g_strcmp0(button_label, "CREATE GLADIATOR") == 0) {
         g_print("Create Gladiator clicked\n");
@@ -469,6 +462,7 @@ int main(int argc, char *argv[]) {
                     .health = 200,
                     .Attack_P = 10 ,
                     .Defense_d = 8 ,
+                    .speed = 11 ,
                     .attack = gladiator_attack
             },
             {
@@ -483,7 +477,7 @@ int main(int argc, char *argv[]) {
                             .running = 8,
                             .attacking1 = 4,
                             .attacking2 = 4,
-                            .attacking3 = 15,
+                            .attacking3 = 8,
                             .defending = 14,
                             .jumping = 9,
                             .hurting = 3,
@@ -496,6 +490,7 @@ int main(int argc, char *argv[]) {
                     .health = 300,
                     .Attack_P = 18 ,
                     .Defense_d = 0 ,
+                    .speed = 9 ,
                     .attack = gladiator_attack
             },
             {
@@ -505,7 +500,7 @@ int main(int argc, char *argv[]) {
                     .current_frame = 0,
                     .current_action = 0,
                     .action_frames = {
-                            .standing = 8,
+                            .standing = 1,
                             .walking = 7,
                             .running = 6,
                             .attacking1 = 5,
@@ -523,6 +518,7 @@ int main(int argc, char *argv[]) {
                     .health = 150,
                     .Attack_P = 20 ,
                     .Defense_d = 10 ,
+                    .speed = 10,
                     .attack = gladiator_attack
             },
     };
@@ -545,6 +541,9 @@ int main(int argc, char *argv[]) {
                 .sprite_width = (12672/22),
                 .sprite_height = (1600/5),
                 .health = 200,
+                .attack_p = 15,
+                .add_health = 0,
+                .speed = 7,
                 .attack = machine_attack
             },
              {
@@ -562,8 +561,11 @@ int main(int argc, char *argv[]) {
                 .x_position = 1900 - 420,
                 .y_position = 430,
                 .sprite_width = 420,
-                .sprite_height = 279,
+                .sprite_height = 280.4,
                 .health = 200,
+                .attack_p = 13,
+                .add_health = 2,
+                .speed = 9,
                 .attack = machine_attack
             },
 

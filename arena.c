@@ -1,6 +1,5 @@
 
 #include "arena.h"
-#include "player.h"
 #include "gtk_utils.h" // Include the utility functions header
 
 // Global variables
@@ -11,6 +10,8 @@ GtkWidget *machine_health_label;
 GtkWidget *gladiator_health_label;
 Actor gladiator ;
 Machine machine;
+int smart_flag = 0;  // flag to indicate smart machine
+gchar* selected_arena = "E:\\ILISI_s1\\GTK\\Gladiator\\resourses\\Arena.png";
 
 
 gboolean is_paused = FALSE;
@@ -107,19 +108,20 @@ gboolean update_animation(gpointer data) {
 }
 
 //------------------------------------------------------- reguler machine --------------------
+
+// Function to handle machine attack
 void machine_attack(Machine *self, Actor *opponent) {
     if (self->health <= 0) {
         self->current_action = 4; // Ensure the machine is in the dying action if health is zero
         return;
     }
     if (self->current_action == 2) {
-        if (abs(self->x_position - opponent->x_position) + 100 < self->sprite_width) {
-            int damage = 15;
+        if (abs(self->x_position - opponent->x_position) < self->sprite_width + 100) {
+            int damage = self->attack_p;
             if (opponent->current_action == 6) { // Check if gladiator is defending
-                damage /= 2; // Reduce damage if defending
+                damage -= opponent->Defense_d; // Reduce damage if defending
             }
             opponent->health -= damage;
-            // Ensure the gladiator stops all actions if dead
             if (opponent->health <= 0) {
                 opponent->current_action = 9; // Dying action
             } else {
@@ -128,8 +130,15 @@ void machine_attack(Machine *self, Actor *opponent) {
             opponent->current_frame = 0;
         }
     }
-}
 
+    // Smart machine feature: health regeneration if gladiator is not attacking
+    if (smart_flag && opponent->current_action < gladiator.action_frames.attacking1) {
+        self->health += self->add_health; // Regenerate health
+        if (self->health > 200) {
+            self->health = 200; // Cap health at 200
+        }
+    }
+}
 
 gboolean update_machine_animation(gpointer data) {
     if (is_paused || is_game_over) return TRUE;
@@ -297,17 +306,7 @@ void toggle_pause(GtkWidget *widget, gpointer data) {
     }
 }
 
-gboolean check_game_over(gpointer data) {
-    if (is_game_over) {
-        if (gladiator.health <= 0) {
-            gtk_label_set_text(GTK_LABEL(data), "Machine Wins!");
-        } else if (machine.health <= 0) {
-            gtk_label_set_text(GTK_LABEL(data), "Gladiator Wins!");
-        }
-    }
 
-    return TRUE;
-}
 
 void run_game(Actor *player , Machine *selected_machine , int is_smart ) {
     // Initialize GTK
@@ -322,7 +321,7 @@ void run_game(Actor *player , Machine *selected_machine , int is_smart ) {
 
 
     // Create the main window
-    GdkPixbuf *arena_pixbuf = gdk_pixbuf_new_from_file("E:\\ILISI_s1\\GTK\\Gladiator\\resourses\\Arena.png", NULL);
+    GdkPixbuf *arena_pixbuf = gdk_pixbuf_new_from_file(selected_arena, NULL);
     gint arena_width = gdk_pixbuf_get_width(arena_pixbuf);
     gint arena_height = gdk_pixbuf_get_height(arena_pixbuf);
     GtkWidget *window = create_window("Sprite Animation", arena_width, arena_height);
@@ -335,7 +334,7 @@ void run_game(Actor *player , Machine *selected_machine , int is_smart ) {
 
     // Update the background image
     GtkWidget *arena_image = NULL;
-    update_background_image(fixed, &arena_image, "E:\\ILISI_s1\\GTK\\Gladiator\\resourses\\Arena.png");
+    update_background_image(fixed, &arena_image, selected_arena);
 
     // Create an image widget to display the sprite animation
     gladiator.image = GTK_IMAGE(gtk_image_new());
@@ -394,10 +393,22 @@ void run_game(Actor *player , Machine *selected_machine , int is_smart ) {
 
     // Start the time label update every second
     g_timeout_add_seconds(1, update_time_label, NULL);
-    g_timeout_add(1000 / 60, check_game_over, fixed); // Check for game over
 
     play_sound("E:\\ILISI_s1\\GTK\\Gladiator\\resourses\\GameMusic.wav");
     // Start the GTK main loop
     gtk_main();
 
 }
+
+
+//gboolean check_game_over(gpointer data) {
+//    if (is_game_over) {
+//        if (gladiator.health <= 0) {
+//            gtk_label_set_text(GTK_LABEL(data), "Machine Wins!");
+//        } else if (machine.health <= 0) {
+//            gtk_label_set_text(GTK_LABEL(data), "Gladiator Wins!");
+//        }
+//    }
+//
+//    return TRUE;
+//}
