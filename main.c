@@ -24,6 +24,8 @@ GtkWidget *button_help;
 int selected_avatar ;
 // Global variable to store the selected player
 Actor *selected_player = NULL;
+Actor *player = NULL;
+
 Machine *selected_machine = NULL ;
 int isSmart = 1 ;
 
@@ -52,6 +54,8 @@ void check_player_attributes(GtkWidget *button, gpointer data) {
     }
 
     // Si les attributs sont valides, appelez la fonction create_images_window
+    // Pass the player to the game function
+    selected_player = player;
     create_images_window();
 }
 
@@ -182,16 +186,127 @@ void ok_button_clicked_create(GtkWidget *widget, gpointer data) {
     //ajout_au_Grille(myGrid->Grille, photo_area->box, 2, 1);
 
 
-    Player players[] = {
-            {1, "knight", "E:\\ILISI_s1\\GTK\\Gladiator\\resourses\\knight.png", NULL, 0, 0, 0, 0, NULL},
-            {2, "Lightning mage", "E:\\ILISI_s1\\GTK\\Gladiator\\resourses\\mage.png", NULL, 0, 0, 0, 0, NULL},
-            {3, "samurai", "E:\\ILISI_s1\\GTK\\Gladiator\\resourses\\samurai.png", NULL, 0, 0, 0, 0, NULL},
-            {4, "commander", "E:\\ILISI_s1\\GTK\\Gladiator\\resourses\\commander.png", NULL, 0, 0, 0, 0, NULL},
-            {5, "magician", "E:\\ILISI_s1\\GTK\\Gladiator\\resourses\\magician.png", NULL, 0, 0, 0, 0, NULL},
-            {6, "knight2", "E:\\ILISI_s1\\GTK\\Gladiator\\resourses\\knight2.png", NULL, 0, 0, 0, 0, NULL}
+    Actor players[4] = {
+            {
+                    .name = "Light Mage",
+                    .sprite_sheet = "E:\\ILISI_s1\\GTK\\Gladiator\\resourses\\Light_Mage_Spritelist.png",
+                    .image = "E:\\ILISI_s1\\GTK\\Gladiator\\resourses\\mage.png",
+                    .current_frame = 0,
+                    .current_action = 0,
+                    .action_frames = {
+                            .standing = 7,
+                            .walking = 7,
+                            .running = 8,
+                            .attacking1 = 10,
+                            .attacking2 = 4,
+                            .attacking3 = 12,
+                            .defending = 13,
+                            .jumping = 8,
+                            .hurting = 3,
+                            .dying = 5
+                    },
+                    .x_position = 10,
+                    .y_position = 450,
+                    .sprite_width = 3584/15,
+                    .sprite_height = 239,
+                    .health = 300,
+                    .Attack_P = 18 ,
+                    .Defense_d = 0 ,
+                    .speed = 9 ,
+                    .attack = gladiator_attack
+            },
+
+            {
+                    .name = "Wanderer Magican",
+                    .sprite_sheet = "E:\\ILISI_s1\\GTK\\Gladiator\\resourses\\Wanderer_Magican_Spritelist.png",
+                    .image = "E:\\ILISI_s1\\GTK\\Gladiator\\resourses\\magician.png",
+                    .current_frame = 0,
+                    .current_action = 0,
+                    .action_frames = {
+                            .standing = 8,
+                            .walking = 7,
+                            .running = 8,
+                            .attacking1 = 7,
+                            .attacking2 = 9,
+                            .attacking3 = 15,
+                            .defending = 6,
+                            .jumping = 8,
+                            .hurting = 4,
+                            .dying = 4
+                    },
+                    .x_position = 10,
+                    .y_position = 450,
+                    .sprite_width = 3584/16,
+                    .sprite_height = 225,
+                    .health = 300,
+                    .Attack_P = 18 ,
+                    .Defense_d = 0 ,
+                    .speed = 9 ,
+                    .attack = gladiator_attack
+            },
+
+
+            {
+                    .name = "Samurai Commander",
+                    .sprite_sheet = "E:\\ILISI_s1\\GTK\\Gladiator\\resourses\\Samurai_Commander_Spritelist.png",
+                    .image = "E:\\ILISI_s1\\GTK\\Gladiator\\resourses\\commander.png",
+                    .current_frame = 0,
+                    .current_action = 0,
+                    .action_frames = {
+                            .standing = 5,
+                            .walking = 9,
+                            .running = 8,
+                            .attacking1 = 4,
+                            .attacking2 = 5,
+                            .attacking3 = 4,
+                            .defending = 2,
+                            .jumping = 7,
+                            .hurting = 2,
+                            .dying = 6
+                    },
+                    .x_position = 10,
+                    .y_position = 450,
+                    .sprite_width = 256,
+                    .sprite_height = 256.4,
+                    .health = 200,
+                    .Attack_P = 10 ,
+                    .Defense_d = 8 ,
+                    .speed = 11 ,
+                    .attack = gladiator_attack
+            },
+
+
+            {
+                    .name = "Samurai Commander",
+                    .sprite_sheet = "E:\\ILISI_s1\\GTK\\Gladiator\\resourses\\Samurai_Archer_Spritelist.png",
+                    .image = "E:\\ILISI_s1\\GTK\\Gladiator\\resourses\\samurai.png",
+                    .current_frame = 0,
+                    .current_action = 0,
+                    .action_frames = {
+                            .standing = 5,
+                            .walking = 9,
+                            .running = 8,
+                            .attacking1 = 4,
+                            .attacking2 = 5,
+                            .attacking3 = 4,
+                            .defending = 2,
+                            .jumping = 7,
+                            .hurting = 2,
+                            .dying = 6
+                    },
+                    .x_position = 10,
+                    .y_position = 450,
+                    .sprite_width = 256,
+                    .sprite_height = 256.1,
+                    .health = 200,
+                    .Attack_P = 10 ,
+                    .Defense_d = 8 ,
+                    .speed = 11 ,
+                    .attack = gladiator_attack
+            },
     };
     // Create the Player thumbnails and add them to the grid
-    GtkWidget *thumbnails_container = create_Player_thumbnails(players, 6);
+    GtkWidget *thumbnails_container = create_Player_thumbnails(players, 4);
     gtk_widget_set_name(thumbnails_container, "thumbnails-container");
 
 
@@ -344,7 +459,6 @@ void on_button_clicked(GtkWidget *button, gpointer data) {
     if (g_strcmp0(button_label, "Start") == 0) {
         if (selected_player && selected_machine) {
             g_print("Starting the game with %s\n", selected_player->name);
-            //run_game(selected_player);  // Call run_game with the selected player
             create_images_window(selected_player);
         } else {
             g_print("No player or machine selected!\n");
@@ -465,6 +579,7 @@ int main(int argc, char *argv[]) {
                     .speed = 11 ,
                     .attack = gladiator_attack
             },
+
             {
                     .name = "Fire vizard",
                     .sprite_sheet = "E:\\ILISI_s1\\GTK\\Gladiator\\resourses\\Fire_Mage_Spritelist.png",
@@ -493,6 +608,7 @@ int main(int argc, char *argv[]) {
                     .speed = 9 ,
                     .attack = gladiator_attack
             },
+
             {
                     .name = "Knight",
                     .sprite_sheet = "E:\\ILISI_s1\\GTK\\Gladiator\\resourses\\knight_1_spritelist.png",

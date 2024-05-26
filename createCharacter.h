@@ -23,7 +23,8 @@
 Box *photo_area ;// D�claration de la variable globale
 GtkWidget *current_photo_widget = NULL;
 GtkWidget *main_box = NULL;
-
+Actor *selected_player ;
+Actor *player ;
 typedef struct {
     GtkWidget *sliders[NUM_PlayerISTICS];
     GtkWidget *remaining_points_label;
@@ -32,7 +33,7 @@ typedef struct {
 
 // Structure to hold player data
 
-Actor *player = NULL;
+
 //Machine *machine = NULL;
 typedef struct {
     GtkWidget *entry;
@@ -168,11 +169,11 @@ void on_slider_value_changed(GtkRange *range, gpointer user_data) {
     player->health = (int)gtk_range_get_value(GTK_RANGE(options->sliders[2]));
     player->Attack_P = (int)gtk_range_get_value(GTK_RANGE(options->sliders[1]));
     player->Defense_d = (int)gtk_range_get_value(GTK_RANGE(options->sliders[0]));
-//    player->speed = (int)gtk_range_get_value(GTK_RANGE(options->sliders[3]));
+    player->speed = (int)gtk_range_get_value(GTK_RANGE(options->sliders[3]));
     printf("\nPlayer stats updated: name:%s PV=%d, Attack=%d, Defense=%d",
            player->name,player->health, player->Attack_P, player->Defense_d);
 
-    // example_function(); // Uncomment if needed
+
 }
 // Exemple d'utilisation des valeurs de la structure Player
 void example_function() {
@@ -181,7 +182,7 @@ void example_function() {
     printf("PV du joueur : %d\n", player->health);
     printf("Attaque du joueur : %d\n", player->Attack_P);
     printf("D�fense du joueur : %d\n", player->Defense_d);
-//    printf("Vitesse du joueur : %d\n", player->speed);
+    printf("Vitesse du joueur : %d\n", player->speed);
 }
 GtkWidget* create_slider(PlayerOptions *options) {
     GtkWidget *slider = gtk_scale_new_with_range(GTK_ORIENTATION_HORIZONTAL, 0, TOTAL_POINTS, 1);
@@ -209,19 +210,19 @@ void load_Player_photo(const gchar *photo_path) {
     // Charger la nouvelle photo dans le widget existant
     gtk_image_set_from_file(GTK_IMAGE(current_photo_widget), photo_path);
 }
-void Player_thumbnail_clicked(GtkWidget *widget, gpointer data) {
-    Actor *player_selected = (Actor *)data;
-    player->image = player_selected->image;
-    player->sprite_sheet  = player_selected->sprite_sheet;
+void Player_thumbnail_clicked(GtkWidget *widget, Actor *data) {
+    selected_player = (Actor *)data;
+    player = data ;
+    player->image = data->image;
+    player->sprite_sheet  = data->sprite_sheet;
     //player->name=player_selected->name;
     // Utilisez les donn�es du joueur comme vous le souhaitez
-    printf("Nom: %s\n", player->name);
-    printf("Chemin d'image: %s\n", player->image);
-    // Utilisez les valeurs du joueur comme vous le souhaitez
-    printf("PV du joueur : %d\n", player->health);
-    printf("Attaque du joueur : %d\n", player->Attack_P);
-    printf("D�fense du joueur : %d\n", player->Defense_d);
-//    printf("Vitesse du joueur : %d\n", player->speed);
+    printf("Nom -----: %s\n", selected_player->name);
+    printf("Chemin d'image: %s\n", selected_player->sprite_sheet);
+    printf("PV du joueur : %d\n", selected_player->health);
+    printf("Attaque du joueur : %d\n", selected_player->Attack_P);
+    printf("D�fense du joueur : %d\n", selected_player->Defense_d);
+    printf("Vitesse du joueur : %d\n", selected_player->speed);
 
     load_Player_photo(player->image);
 
@@ -229,7 +230,7 @@ void Player_thumbnail_clicked(GtkWidget *widget, gpointer data) {
     // g_free((gpointer)data);
 }
 
-GtkWidget* create_Player_thumbnails(Player players[], int num_Players) {
+GtkWidget* create_Player_thumbnails(Actor players[4], int num_Players) {
     // Cr�er un conteneur pour les miniatures
     GtkWidget *thumbnails_container = gtk_box_new(GTK_ORIENTATION_VERTICAL, 5);
 
