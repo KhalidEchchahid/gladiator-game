@@ -26,10 +26,10 @@ void gladiator_attack(Actor *self, Machine *opponent) {
     if (current_time - last_gladiator_attack_time >= 1 * G_TIME_SPAN_SECOND) { // 1 second cooldown
         if (self->current_action == 3 || self->current_action == 4 || self->current_action == 5) {
             if (abs(self->x_position - opponent->x_position) + 200 < self->sprite_width) {
-                opponent->health -= 10;
+                opponent->health -= self->Attack_P;
                 opponent->current_action = 3; // Hurting action
                 opponent->current_frame = 0;
-                opponent->x_position -= 10; // Move the machine backward when hit
+                opponent->x_position -= opponent->speed; // Move the machine backward when hit
                 if (opponent->health <= 0) {
                     opponent->current_action = 4; // Dying action
                 }
@@ -91,14 +91,14 @@ gboolean update_animation(gpointer data) {
         // Handle gladiator movement
         if (!(gladiator.x_position >= 1900 - gladiator.sprite_width)) {
             if (gladiator.current_action == 1) {
-                gladiator.x_position += 5;
+                gladiator.x_position += gladiator.speed / 2;
             } else if (gladiator.current_action == 2) {
-                gladiator.x_position += 10;
+                gladiator.x_position += gladiator.speed;
             } else if (gladiator.current_action == 7) {
                 if (is_backward && gladiator.x_position >= 17) {
-                    gladiator.x_position -= 10;
+                    gladiator.x_position -= gladiator.speed;
                 } else {
-                    gladiator.x_position += 7;
+                    gladiator.x_position += gladiator.speed - 2;
                 }
             }
         }
@@ -119,7 +119,7 @@ void machine_attack(Machine *self, Actor *opponent) {
         if (abs(self->x_position - opponent->x_position) < self->sprite_width + 100) {
             int damage = self->attack_p;
             if (opponent->current_action == 6) { // Check if gladiator is defending
-                damage -= opponent->Defense_d; // Reduce damage if defending
+                damage -= opponent->Defense_d / 2 ; // Reduce damage if defending
             }
             opponent->health -= damage;
             if (opponent->health <= 0) {

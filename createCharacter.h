@@ -218,7 +218,7 @@ void Player_thumbnail_clicked(GtkWidget *widget, Actor *data) {
     //player->name=player_selected->name;
     // Utilisez les donn�es du joueur comme vous le souhaitez
     printf("Nom -----: %s\n", selected_player->name);
-    printf("Chemin d'image: %s\n", selected_player->sprite_sheet);
+     ("Chemin d'image: %s\n", selected_player->sprite_sheet);
     printf("PV du joueur : %d\n", selected_player->health);
     printf("Attaque du joueur : %d\n", selected_player->Attack_P);
     printf("D�fense du joueur : %d\n", selected_player->Defense_d);
