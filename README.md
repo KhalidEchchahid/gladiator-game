@@ -39,7 +39,6 @@ This project is a **turn-based combat game** where players can select or create 
 
 ### 🏟️ Arena Battles  
 - Different combat arenas that **enhance immersion**.  
-- Randomized AI behavior for varied challenges.  
 
 ![image](https://github.com/user-attachments/assets/aaeccf7b-d3bf-4300-9bf9-9ca329b34615)
 ![image](https://github.com/user-attachments/assets/224c9de8-d48f-4e08-be40-202e2686d1a8)
