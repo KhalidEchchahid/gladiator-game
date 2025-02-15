@@ -45,9 +45,4 @@ This project is a **turn-based combat game** where players can select or create 
 ![image](https://github.com/user-attachments/assets/224c9de8-d48f-4e08-be40-202e2686d1a8)
 ![image](https://github.com/user-attachments/assets/c3391397-18e5-4d4e-ba1c-f409334f4c95)
 
-## 🔧 Installation & Setup  
 
-### **1️⃣ Clone the Repository**  
-```bash
-git clone https://github.com/your-repo/gladiator-game.git
-```
